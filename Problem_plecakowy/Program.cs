@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization; // LISTA
-
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("Test_Programu_plecakoego")]
 
 namespace ConsoleApp1
 {
     class Przedmiot
     {
-        private int nr_przedmiotu { get; }
-        private int waga { get; }
-        private int wartosc { get; }
-        private decimal Wartosc_Masa;
-        public int getNrPrzedmiotu() { return nr_przedmiotu; }
-        public int getWaga() { return waga; }
-        public int getWartosc() { return wartosc; }
-        public decimal get_WartoscMasa() { return Wartosc_Masa; }
+        public int nr_przedmiotu {get;}
+        public int waga {get;}
+        public int wartosc {get;}
+        public decimal Wartosc_Masa {get;}
 
         public Przedmiot(int nr, int masa, int cena)
         {
@@ -41,9 +38,9 @@ namespace ConsoleApp1
 
     class Result
     {
-        private List<int> ListaPrzedmiotow { get; }
+        public List<int> ListaPrzedmiotow {get;}
         private int SumaWartosci;
-        private int SumaMas;
+        private int SumaMas; public int get_SumaMas() {return SumaMas;}
         private int Pojemnosc;
 
         public Result(int capacity)
@@ -80,34 +77,42 @@ namespace ConsoleApp1
 
     class Problem
     {
+        
+        private int liczba_przedmiotow;
+        public List<Przedmiot> ListaPrzedmiotow { get; }
+        public List<Przedmiot> lista_sort { get; set; }
+
         public Result Solve(int capacity)
         {
             if (capacity <= 0) { Console.Write("ERROR, za mały plecak!\n"); }
             Result rozwiazanie = new Result(capacity);
-            List<Przedmiot> lista_sort = new List<Przedmiot>(lista_przedmiotow);
-            lista_sort.Sort((a, b) => b.get_WartoscMasa().CompareTo(a.get_WartoscMasa()));
+            /* lista_sort = new List<Przedmiot>(ListaPrzedmiotow);
+            Skrócona inicjalizacja:                             */
+            lista_sort = [.. ListaPrzedmiotow];
+            lista_sort.Sort((a, b) => b.Wartosc_Masa.CompareTo(a.Wartosc_Masa));
             foreach (Przedmiot tmp in lista_sort) {
                 //Console.WriteLine(tmp); /* DISPLAY posortowane */
-                rozwiazanie.DodajPrzedmiot(tmp.getNrPrzedmiotu(), tmp.getWartosc(), tmp.getWaga());
+                rozwiazanie.DodajPrzedmiot(tmp.nr_przedmiotu, tmp.wartosc, tmp.waga);
             }
             return rozwiazanie;
         }
-        private int liczba_przedmiotow { get; }
-        private List<Przedmiot> lista_przedmiotow { get; }
+
         public Problem(int seed, int ilosc_przedmiotow)
         {
             Random ran = new Random(seed);
             if (ilosc_przedmiotow == 0) liczba_przedmiotow = ran.Next(5, 15);
             else liczba_przedmiotow = ilosc_przedmiotow;
-            lista_przedmiotow = new List<Przedmiot>();
-            for (int i = 0; i < liczba_przedmiotow; ++i) lista_przedmiotow.Add(new Przedmiot(i, ran.Next(1, 10), ran.Next(1, 10)));
-        }
-        public void Display()
-        {
-            Console.WriteLine($"Liczba przedmiotów: {liczba_przedmiotow}\n");
-            foreach (Przedmiot p in lista_przedmiotow) Console.WriteLine(p);
+            ListaPrzedmiotow = new List<Przedmiot>();
+            lista_sort = new List<Przedmiot>();
+            for (int i = 0; i < liczba_przedmiotow; ++i) ListaPrzedmiotow.Add(new Przedmiot(i, ran.Next(1, 10), ran.Next(1, 10)));
         }
 
+        public override string ToString()
+        {
+            string ret = $"Liczba przedmiotów: {liczba_przedmiotow}\n";
+            foreach (Przedmiot p in ListaPrzedmiotow) ret += $"{p}\n";
+            return ret;
+        }
 
 
 
@@ -123,19 +128,18 @@ namespace ConsoleApp1
         {
             Console.Write("Podaj ilosc_przedmiotow: ");
             int ilosc_przedmiotow = int.Parse(Console.ReadLine());
-            Console.WriteLine($"Całkowita liczba przedmiotów do zabrania= {ilosc_przedmiotow}");
+            Console.WriteLine($"Całkowita liczba przedmiotów do zabrania: {ilosc_przedmiotow}");
 
             Console.Write("Podaj seed: ");
             int seed = int.Parse(Console.ReadLine());
-            Console.WriteLine($"Podany seed do rand() = {seed}");
+            Console.WriteLine($"Podany seed do Random({seed}).");
 
 
             Problem plecakowy = new Problem(seed, ilosc_przedmiotow);
-            plecakowy.Display();
+            Console.Write(plecakowy);
             Console.Write("Podaj pojemność plecaka: ");
             int Pojemnosc = int.Parse(Console.ReadLine());
             Console.Write(plecakowy.Solve(Pojemnosc));
         }
     }
 }
-
