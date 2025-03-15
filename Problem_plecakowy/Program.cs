@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization; // LISTA
 using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("Test_Programu_plecakoego")]
+[assembly: InternalsVisibleTo("Test_Programu_plecakoego"), InternalsVisibleTo("Problem_plecakowy_GUI")]
+
 
 namespace ConsoleApp1
 {
@@ -22,7 +23,7 @@ namespace ConsoleApp1
         }
         public override string ToString()
         {
-            return $"{nr_przedmiotu}.      {wartosc} [zł],      {waga} [kg],      {Wartosc_Masa} [zł/kg]";
+            return $"{nr_przedmiotu,2}.     {wartosc,2} [zł],     {waga,2} [kg],    {Wartosc_Masa,8:F4} [zł/kg]";
         }
 
     }
@@ -65,6 +66,16 @@ namespace ConsoleApp1
             string przedmioty = ListaPrzedmiotow.Count > 0 ? string.Join(", ", ListaPrzedmiotow) : "Brak przedmiotów";
             return $"Items: {przedmioty}\nTotal value: {SumaWartosci}\nTotal weight: {SumaMas}";
         }
+
+        public string[] ToThreeStrings()
+        {
+            string[] ret_string = new string[4];
+            ret_string[0] = $"Suma wartości przedmiotów: {SumaWartosci}";
+            ret_string[1] = $"Suma mas przedmiotów: {SumaMas}";
+            ret_string[2] = "ID, przedmitów: ";
+            ret_string[3] = ListaPrzedmiotow.Count > 0 ? string.Join(", ", ListaPrzedmiotow) : "Brak przedmiotów";
+            return ret_string;
+        }
     }
 
 
@@ -104,7 +115,7 @@ namespace ConsoleApp1
             else liczba_przedmiotow = ilosc_przedmiotow;
             ListaPrzedmiotow = new List<Przedmiot>();
             lista_sort = new List<Przedmiot>();
-            for (int i = 0; i < liczba_przedmiotow; ++i) ListaPrzedmiotow.Add(new Przedmiot(i, ran.Next(1, 10), ran.Next(1, 10)));
+            for (int i = 0; i < liczba_przedmiotow; ++i) ListaPrzedmiotow.Add(new Przedmiot(i, ran.Next(1, 20), ran.Next(1, 20)));
         }
 
         public override string ToString()
@@ -114,14 +125,21 @@ namespace ConsoleApp1
             return ret;
         }
 
-
-
-
-
-
-
-
+        public string[] ToFewStrings()
+        {
+            string[] ret_string = new string[ListaPrzedmiotow.Count];
+            for (int i = 0; i < ListaPrzedmiotow.Count; ++i) ret_string[i] =  ListaPrzedmiotow[i].ToString();
+            return ret_string;
+        }
     }
+
+
+
+
+
+
+
+
     internal class Program
     {
         static void Main(string[] args)
