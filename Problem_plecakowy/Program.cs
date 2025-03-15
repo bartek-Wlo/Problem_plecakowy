@@ -127,18 +127,18 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             Console.Write("Podaj ilosc_przedmiotow: ");
-            int ilosc_przedmiotow = int.Parse(Console.ReadLine());
+            int ilosc_przedmiotow = int.Parse(Console.ReadLine() ?? "10");
             Console.WriteLine($"Całkowita liczba przedmiotów do zabrania: {ilosc_przedmiotow}");
 
             Console.Write("Podaj seed: ");
-            int seed = int.Parse(Console.ReadLine());
+            int seed = int.Parse(Console.ReadLine() ?? "0");
             Console.WriteLine($"Podany seed do Random({seed}).");
 
 
             Problem plecakowy = new Problem(seed, ilosc_przedmiotow);
             Console.Write(plecakowy);
             Console.Write("Podaj pojemność plecaka: ");
-            int Pojemnosc = int.Parse(Console.ReadLine());
+            int Pojemnosc = int.Parse(Console.ReadLine() ?? "8");
             Console.Write(plecakowy.Solve(Pojemnosc));
         }
     }
